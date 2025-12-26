@@ -4,7 +4,7 @@ import { MarketState, TradeSignal } from "../types";
 
 /**
  * SECURE BACKEND-SIMULATED FUNCTION
- * In this environment, process.env.API_KEY is handled securely by the platform.
+ * In this environment, process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT' is handled securely by the platform.
  */
 export const analyzeTradeSignal = async (
   pair: string,
@@ -12,7 +12,7 @@ export const analyzeTradeSignal = async (
   isKillZone: boolean,
   volatilityScore: number
 ): Promise<{ data: TradeSignal | null; error: string | null }> => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = process.env.API_KEY || 'FAKE_API_KEY_FOR_DEVELOPMENT';
   
   if (!apiKey) {
     return { data: null, error: "CRITICAL: Secure API Key missing from environment." };
