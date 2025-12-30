@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { MarketState, TradeSignal } from "../types";
 
@@ -18,8 +17,8 @@ export const analyzeTradeSignal = async (
     return { data: null, error: "CRITICAL: Secure API Key missing from environment." };
   }
 
-  // Create a fresh instance for every "backend" call to ensure latest key/state
-  const ai = new GoogleGenAI({ apiKey });
+  // Always use the required initialization format
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const systemPrompt = `
     You are a Senior Quant Developer and Trading Mentor. 
