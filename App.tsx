@@ -219,7 +219,7 @@ const App: React.FC = () => {
             </button>
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tighter flex flex-wrap items-center gap-2 md:gap-4 mb-2 break-words">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-white tracking-tighter flex flex-wrap items-center gap-2 md:gap-4 mb-2 break-words leading-tight">
               <span className="bg-blue-600 px-3 py-1 md:px-4 md:py-1.5 rounded-2xl text-[10px] md:text-xs align-middle italic font-black shadow-[0_0_20px_rgba(37,99,235,0.4)] whitespace-nowrap">CORE</span>
               FXCURRENCY ADVISER
             </h1>
@@ -244,10 +244,10 @@ const App: React.FC = () => {
             </div>
             {visibleSections.strength && (
               <div className="p-5 space-y-4">
-                <div className="bg-blue-500/5 p-3 rounded-xl border border-blue-500/10 mb-2">
+                <div className="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10 mb-2">
                   <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                     <i className="fas fa-graduation-cap mr-2 text-blue-500"></i>
-                    Beginner Tip: We compare individual currency strength to find "Strong vs Weak" matchups for higher win rates.
+                    <b>Beginner Explanation:</b> We analyze each currency individually. We look for a "strong" currency (like USD +50%) vs a "weak" one (like JPY -60%) to find the best trades.
                   </p>
                 </div>
                 <CurrencyStrengthMeter data={marketState.currencies} />
@@ -264,10 +264,10 @@ const App: React.FC = () => {
             </div>
             {visibleSections.adr && (
               <div className="p-5 space-y-4">
-                <div className="bg-orange-500/5 p-3 rounded-xl border border-orange-500/10 mb-2">
+                <div className="bg-orange-500/5 p-4 rounded-xl border border-orange-500/10 mb-2">
                   <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                     <i className="fas fa-gas-pump mr-2 text-orange-500"></i>
-                    Beginner Tip: Every pair has a "fuel limit" per day (ADR). If it uses 90%+, it's likely to slow down or reverse.
+                    <b>Beginner Explanation:</b> Every pair has a "Daily Range" (fuel limit). If a pair has already moved 90% of its normal distance, it's "exhausted" and likely to stop moving.
                   </p>
                 </div>
                 <ADRMeter data={marketState.adr} />
@@ -284,6 +284,12 @@ const App: React.FC = () => {
             </div>
             {visibleSections.target && (
               <div className="p-6 space-y-6">
+                <div className="bg-amber-500/5 p-4 rounded-xl border border-amber-500/10 mb-2">
+                  <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
+                    <i className="fas fa-crosshairs mr-2 text-amber-500"></i>
+                    <b>Beginner Explanation:</b> Select the asset you want the AI to analyze. Start with "Majors" (like EURUSD) as they are the most predictable and safe for beginners.
+                  </p>
+                </div>
                 <div className="space-y-3">
                   <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest block">Quick Access Majors</span>
                   <div className="grid grid-cols-2 gap-2">
@@ -296,7 +302,7 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="space-y-3 pt-4 border-t border-zinc-800/50">
-                   <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest block">All Tradable Assets</span>
+                   <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest block">Expanded Asset List</span>
                    <div className="relative group">
                       <select 
                         value={selectedPair} 
@@ -319,7 +325,7 @@ const App: React.FC = () => {
           <div className="bg-card rounded-3xl border-t-4 border-sky-500 shadow-[0_40px_100px_rgba(0,0,0,0.5)] overflow-hidden">
             <div className="p-8 flex items-center justify-between border-b border-zinc-800/50 bg-zinc-900/40">
               <h3 className="text-sm font-black text-white uppercase tracking-[0.3em] flex items-center gap-4">
-                <i className="fas fa-clock text-sky-500"></i> Market Sessions
+                <i className="fas fa-clock text-sky-500"></i> Market Timeline
               </h3>
               <button onClick={() => toggleSection('timeline')} className="text-zinc-600 hover:text-sky-500">
                 <i className={`fas ${visibleSections.timeline ? 'fa-eye' : 'fa-eye-slash'} text-lg`}></i>
@@ -327,10 +333,10 @@ const App: React.FC = () => {
             </div>
             {visibleSections.timeline && (
               <div className="p-8 space-y-6">
-                <div className="bg-sky-500/5 p-4 rounded-2xl border border-sky-500/10">
+                <div className="bg-sky-500/5 p-5 rounded-2xl border border-sky-500/10">
                   <p className="text-[11px] text-zinc-400 font-bold leading-relaxed italic">
                     <i className="fas fa-info-circle mr-2 text-sky-500"></i>
-                    Beginner Explanation: The forex market moves most when major financial hubs (London/New York) are open at the same time. This is called "Overlap" and provides the best liquidity for trading.
+                    <b>Beginner Explanation:</b> Forex operates in waves. The "London" and "New York" sessions are when the most money moves. The <b>KillZones</b> are specific times when institutional banks usually hunt for orders.
                   </p>
                 </div>
                 <MarketHoursTimeline />
@@ -349,10 +355,10 @@ const App: React.FC = () => {
             </div>
             {visibleSections.liquidity && (
               <div className="p-8 space-y-6">
-                <div className="bg-blue-500/5 p-4 rounded-2xl border border-blue-500/10">
+                <div className="bg-blue-500/5 p-5 rounded-2xl border border-blue-500/10">
                   <p className="text-[11px] text-zinc-400 font-bold leading-relaxed italic">
                     <i className="fas fa-search-dollar mr-2 text-blue-500"></i>
-                    Beginner Explanation: Big banks need millions of dollars in orders to enter the market. They often move price to these "Nodes" where retail traders place their stops to get their own orders filled.
+                    <b>Beginner Explanation:</b> Banks need large amounts of "Liquidity" to buy or sell. They move price to these specific levels (Nodes) to trap smaller traders and get their own massive orders filled.
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -385,10 +391,10 @@ const App: React.FC = () => {
              </div>
              {visibleSections.dollar && (
                <div className="p-6 space-y-4">
-                  <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-2">
+                  <div className="bg-zinc-950/80 p-4 rounded-xl border border-zinc-800/50 mb-2">
                     <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                       <i className="fas fa-anchor mr-2 text-white"></i>
-                      Beginner Explanation: The DXY index tracks the US Dollar's strength. Since most pairs are traded against USD, a strong Dollar usually pushes other pairs down.
+                      <b>Beginner Explanation:</b> The <b>DXY</b> is the index for the US Dollar. Since the Dollar is the center of the world, when DXY goes UP, pairs like EURUSD almost always go DOWN.
                     </p>
                   </div>
                   <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 flex justify-between items-center shadow-inner">
@@ -414,7 +420,7 @@ const App: React.FC = () => {
                 <div className="bg-rose-500/5 p-4 rounded-xl border border-rose-500/10 mb-2">
                   <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                     <i className="fas fa-bullhorn mr-2 text-rose-500"></i>
-                    Beginner Explanation: We track high-impact news like Inflation and Interest Rates. These events are the main reason for large, fast price movements in the market.
+                    <b>Beginner Explanation:</b> We monitor global news events. "High Impact" events like CPI or Interest Rates cause massive price spikes. Avoid trading during these spikes if you are a beginner.
                   </p>
                 </div>
                 <div className="space-y-4 max-h-[350px] overflow-y-auto pr-3 custom-scrollbar">
@@ -448,7 +454,7 @@ const App: React.FC = () => {
                  <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping"></div>
                  <span className="text-[10px] md:text-[11px] font-black text-blue-500 uppercase tracking-[0.5em]">SECURE ADVISORY CORE</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter leading-tight">
                 PREDICTIVE VERDICT: <span className="text-blue-500">{selectedPair}</span>
               </h2>
             </div>
