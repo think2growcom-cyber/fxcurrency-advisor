@@ -1,6 +1,18 @@
 
 export const MAJOR_PAIRS = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'USDCAD', 'USDCHF', 'NZDUSD', 'XAUUSD'];
 
+export const ALL_PAIRS = [
+  ...MAJOR_PAIRS,
+  'GBPJPY', 'EURJPY', 'AUDJPY', 'NZDJPY', 'CHFJPY', 'CADJPY',
+  'EURGBP', 'EURAUD', 'EURNZD', 'EURCAD', 'EURCHF',
+  'GBPAUD', 'GBPNZD', 'GBPCAD', 'GBPCHF',
+  'AUDNZD', 'AUDCAD', 'AUDCHF',
+  'NZDCAD', 'NZDCHF',
+  'CADCHF',
+  'USDMXN', 'USDZAR', 'USDTRY', 'USDSGD',
+  'BTCUSD', 'ETHUSD'
+];
+
 // Sessions defined in UTC hours
 export const SESSIONS = [
   { name: 'Sydney', start: 22, end: 7, color: '#0ea5e9' }, // 10 PM - 7 AM UTC

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MarketState, TradeSignal } from './types';
-import { MAJOR_PAIRS, SESSIONS } from './constants';
+import { MAJOR_PAIRS, ALL_PAIRS, SESSIONS } from './constants';
 import { analyzeTradeSignal } from './services/geminiService';
 import { getLagosTime, isKillZone, calculateVolatilityScore, getActiveSessions, formatLagosTime } from './utils/marketLogic';
 import SessionClock from './components/SessionClock';
@@ -80,7 +80,6 @@ const App: React.FC = () => {
   const refreshMarketData = useCallback(async (isManual = false) => {
     if (isManual) setIsRefreshing(true);
     
-    // Simulate high-fidelity market data aggregation
     const mockState: MarketState = {
       currencies: [
         { symbol: 'USD', strength: Math.random() * 160 - 80, change: 1.2 },
@@ -91,7 +90,7 @@ const App: React.FC = () => {
         { symbol: 'CAD', strength: Math.random() * 160 - 80, change: 0.5 },
         { symbol: 'XAU', strength: Math.random() * 160 - 80, change: 1.1 },
       ],
-      sentiment: MAJOR_PAIRS.map(p => ({
+      sentiment: ALL_PAIRS.map(p => ({
         pair: p,
         long: Math.floor(Math.random() * 50) + 25,
         short: 0
@@ -161,8 +160,8 @@ const App: React.FC = () => {
       <div className="h-screen flex flex-col items-center justify-center bg-[#09090b] text-zinc-600 gap-6">
         <div className="w-16 h-16 border-4 border-zinc-900 border-t-blue-500 rounded-full animate-spin"></div>
         <div className="flex flex-col items-center animate-pulse">
-           <span className="text-[10px] font-black uppercase tracking-[0.5em] mb-2">Quant Terminal</span>
-           <span className="text-sm font-mono font-bold">BOOTING INSTITUTIONAL CORE...</span>
+           <span className="text-[10px] font-black uppercase tracking-[0.5em] mb-2">FX Adviser Core</span>
+           <span className="text-sm font-mono font-bold">BOOTING ADVISORY ENGINE...</span>
         </div>
       </div>
     );
@@ -179,8 +178,8 @@ const App: React.FC = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)} 
             className={`flex items-center gap-4 bg-zinc-900/90 backdrop-blur-2xl hover:bg-zinc-800 text-white px-8 py-5 rounded-3xl shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-zinc-700/40 active:scale-95 transition-all group relative overflow-hidden ${isMenuOpen ? 'ring-2 ring-blue-500' : ''}`}
           >
-             <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-network-wired'} text-blue-500 text-lg transition-transform duration-500 ${isMenuOpen ? 'rotate-90' : ''}`}></i>
-            <span className="text-[11px] font-black uppercase tracking-[0.3em]">QUANT HUB</span>
+             <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-blue-500 text-lg transition-transform duration-500 ${isMenuOpen ? 'rotate-90' : ''}`}></i>
+            <span className="text-[11px] font-black uppercase tracking-[0.3em]">MENU</span>
           </button>
 
           <div className={`w-80 bg-[#0c0c0e]/98 backdrop-blur-3xl border border-zinc-800 rounded-[2.5rem] shadow-[0_50px_120px_rgba(0,0,0,0.9)] p-8 space-y-8 transition-all duration-500 origin-top-right ${isMenuOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-6 pointer-events-none'}`}>
@@ -205,17 +204,6 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
-               <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em] block">Hot Assets</span>
-               <div className="grid grid-cols-4 gap-2.5">
-                {MAJOR_PAIRS.slice(0, 8).map(pair => (
-                  <button key={pair} onClick={() => { setSelectedPair(pair); setIsMenuOpen(false); }} className={`py-3 text-[10px] font-black rounded-xl border transition-all ${selectedPair === pair ? 'bg-amber-500 text-black border-amber-500 shadow-lg' : 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-700'}`}>
-                    {pair.replace('USD', '')}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <button onClick={() => { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); setIsMenuOpen(false); }} className="w-full py-5 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white text-[11px] font-black uppercase tracking-[0.3em] rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-4">
               <i className="fas fa-bolt animate-pulse"></i> FINAL VERDICT
             </button>
@@ -224,23 +212,20 @@ const App: React.FC = () => {
       </div>
 
       <header ref={headerRef} className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 border-b border-zinc-800 pb-12">
-        <div className="flex items-start gap-6">
+        <div className="flex items-start gap-4 md:gap-6 flex-wrap">
           <div className="flex flex-col gap-3">
             <button onClick={() => refreshMarketData(true)} className={`w-12 h-12 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-all active:scale-90 text-blue-500 shadow-2xl ${isRefreshing ? 'animate-spin' : ''}`} title="Refresh Market Data">
               <i className={`fas fa-sync-alt ${isRefreshing ? 'animate-spin' : ''}`}></i>
             </button>
-            <button onClick={reloadApp} className="w-12 h-12 flex items-center justify-center bg-zinc-900 border border-zinc-800 rounded-2xl hover:bg-rose-500/10 hover:text-rose-500 transition-all active:scale-90 text-zinc-700" title="Full System Purge">
-              <i className="fas fa-redo-alt"></i>
-            </button>
           </div>
-          <div>
-            <h1 className="text-5xl font-black text-white tracking-tighter flex items-center gap-4 mb-2">
-              <span className="bg-blue-600 px-4 py-1.5 rounded-2xl text-xs align-middle italic font-black shadow-[0_0_20px_rgba(37,99,235,0.4)]">CORE</span>
-              QUANT TERMINAL
+          <div className="min-w-0 flex-1">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tighter flex flex-wrap items-center gap-2 md:gap-4 mb-2 break-words">
+              <span className="bg-blue-600 px-3 py-1 md:px-4 md:py-1.5 rounded-2xl text-[10px] md:text-xs align-middle italic font-black shadow-[0_0_20px_rgba(37,99,235,0.4)] whitespace-nowrap">CORE</span>
+              FXCURRENCY ADVISER
             </h1>
-            <p className="text-zinc-500 text-[11px] font-black uppercase tracking-[0.5em] flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Institutional Confluence Engine — Live v3.8
+            <p className="text-zinc-500 text-[9px] md:text-[11px] font-black uppercase tracking-[0.3em] md:tracking-[0.5em] flex items-center gap-2 md:gap-3">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+              Institutional Advisory Engine — Live v3.8
             </p>
           </div>
         </div>
@@ -258,7 +243,13 @@ const App: React.FC = () => {
               </button>
             </div>
             {visibleSections.strength && (
-              <div className="p-5">
+              <div className="p-5 space-y-4">
+                <div className="bg-blue-500/5 p-3 rounded-xl border border-blue-500/10 mb-2">
+                  <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
+                    <i className="fas fa-graduation-cap mr-2 text-blue-500"></i>
+                    Beginner Tip: We compare individual currency strength to find "Strong vs Weak" matchups for higher win rates.
+                  </p>
+                </div>
                 <CurrencyStrengthMeter data={marketState.currencies} />
               </div>
             )}
@@ -272,7 +263,13 @@ const App: React.FC = () => {
               </button>
             </div>
             {visibleSections.adr && (
-              <div className="p-5">
+              <div className="p-5 space-y-4">
+                <div className="bg-orange-500/5 p-3 rounded-xl border border-orange-500/10 mb-2">
+                  <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
+                    <i className="fas fa-gas-pump mr-2 text-orange-500"></i>
+                    Beginner Tip: Every pair has a "fuel limit" per day (ADR). If it uses 90%+, it's likely to slow down or reverse.
+                  </p>
+                </div>
                 <ADRMeter data={marketState.adr} />
               </div>
             )}
@@ -286,13 +283,32 @@ const App: React.FC = () => {
               </button>
             </div>
             {visibleSections.target && (
-              <div className="p-6">
-                <div className="grid grid-cols-2 gap-3">
-                  {MAJOR_PAIRS.map(pair => (
-                    <button key={pair} onClick={() => setSelectedPair(pair)} className={`px-4 py-3 text-[10px] font-black rounded-xl border transition-all ${selectedPair === pair ? 'bg-amber-500 text-black border-amber-500 shadow-xl scale-105' : 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-600'}`}>
-                      {pair}
-                    </button>
-                  ))}
+              <div className="p-6 space-y-6">
+                <div className="space-y-3">
+                  <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest block">Quick Access Majors</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {MAJOR_PAIRS.map(pair => (
+                      <button key={pair} onClick={() => setSelectedPair(pair)} className={`px-3 py-2 text-[10px] font-black rounded-xl border transition-all ${selectedPair === pair ? 'bg-amber-500 text-black border-amber-500 shadow-xl' : 'bg-zinc-900 text-zinc-500 border-zinc-800 hover:border-zinc-600'}`}>
+                        {pair}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-4 border-t border-zinc-800/50">
+                   <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest block">All Tradable Assets</span>
+                   <div className="relative group">
+                      <select 
+                        value={selectedPair} 
+                        onChange={(e) => setSelectedPair(e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-800 text-white text-[10px] font-black px-4 py-3 rounded-xl appearance-none outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+                      >
+                        {ALL_PAIRS.map(pair => (
+                          <option key={pair} value={pair} className="bg-zinc-950">{pair}</option>
+                        ))}
+                      </select>
+                      <i className="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none text-[10px]"></i>
+                   </div>
                 </div>
               </div>
             )}
@@ -303,14 +319,20 @@ const App: React.FC = () => {
           <div className="bg-card rounded-3xl border-t-4 border-sky-500 shadow-[0_40px_100px_rgba(0,0,0,0.5)] overflow-hidden">
             <div className="p-8 flex items-center justify-between border-b border-zinc-800/50 bg-zinc-900/40">
               <h3 className="text-sm font-black text-white uppercase tracking-[0.3em] flex items-center gap-4">
-                <i className="fas fa-clock text-sky-500"></i> High-Probability Sessions
+                <i className="fas fa-clock text-sky-500"></i> Market Sessions
               </h3>
               <button onClick={() => toggleSection('timeline')} className="text-zinc-600 hover:text-sky-500">
                 <i className={`fas ${visibleSections.timeline ? 'fa-eye' : 'fa-eye-slash'} text-lg`}></i>
               </button>
             </div>
             {visibleSections.timeline && (
-              <div className="p-8">
+              <div className="p-8 space-y-6">
+                <div className="bg-sky-500/5 p-4 rounded-2xl border border-sky-500/10">
+                  <p className="text-[11px] text-zinc-400 font-bold leading-relaxed italic">
+                    <i className="fas fa-info-circle mr-2 text-sky-500"></i>
+                    Beginner Explanation: The forex market moves most when major financial hubs (London/New York) are open at the same time. This is called "Overlap" and provides the best liquidity for trading.
+                  </p>
+                </div>
                 <MarketHoursTimeline />
               </div>
             )}
@@ -319,7 +341,7 @@ const App: React.FC = () => {
           <div className="bg-card rounded-3xl border-t-4 border-blue-600 shadow-[0_40px_100px_rgba(0,0,0,0.5)] overflow-hidden">
             <div className="p-8 bg-zinc-900/40 flex items-center justify-between border-b border-zinc-800/50">
               <h3 className="text-sm font-black text-white uppercase tracking-[0.3em] flex items-center gap-4">
-                <i className="fas fa-university text-blue-500"></i> Smart Money Liquidity Nodes
+                <i className="fas fa-university text-blue-500"></i> Institutional Liquidity Nodes
               </h3>
               <button onClick={() => toggleSection('liquidity')} className="text-zinc-600 hover:text-blue-500">
                 <i className={`fas ${visibleSections.liquidity ? 'fa-eye' : 'fa-eye-slash'} text-lg`}></i>
@@ -327,9 +349,12 @@ const App: React.FC = () => {
             </div>
             {visibleSections.liquidity && (
               <div className="p-8 space-y-6">
-                <p className="text-[11px] text-zinc-500 font-bold leading-relaxed bg-zinc-950 p-4 rounded-2xl border border-zinc-800/50 italic shadow-inner">
-                  "Institutional traders manipulate price into these liquidity pools before initiating significant directional expansions."
-                </p>
+                <div className="bg-blue-500/5 p-4 rounded-2xl border border-blue-500/10">
+                  <p className="text-[11px] text-zinc-400 font-bold leading-relaxed italic">
+                    <i className="fas fa-search-dollar mr-2 text-blue-500"></i>
+                    Beginner Explanation: Big banks need millions of dollars in orders to enter the market. They often move price to these "Nodes" where retail traders place their stops to get their own orders filled.
+                  </p>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {marketState.liquidityZones.map((zone, idx) => (
                     <div key={idx} className={`p-5 rounded-2xl border-2 flex justify-between items-center transition-all hover:scale-[1.03] shadow-lg ${zone.bias === 'Selling Zone' ? 'bg-rose-500/5 border-rose-500/20' : 'bg-emerald-500/5 border-emerald-500/20'}`}>
@@ -359,7 +384,13 @@ const App: React.FC = () => {
               </button>
              </div>
              {visibleSections.dollar && (
-               <div className="p-6">
+               <div className="p-6 space-y-4">
+                  <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 mb-2">
+                    <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
+                      <i className="fas fa-anchor mr-2 text-white"></i>
+                      Beginner Explanation: The DXY index tracks the US Dollar's strength. Since most pairs are traded against USD, a strong Dollar usually pushes other pairs down.
+                    </p>
+                  </div>
                   <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 flex justify-between items-center shadow-inner">
                     <div className="flex flex-col">
                       <span className="text-[9px] font-black text-zinc-500 uppercase mb-1">DXY Index</span>
@@ -379,7 +410,13 @@ const App: React.FC = () => {
               </button>
             </div>
             {visibleSections.news && (
-              <div className="p-6">
+              <div className="p-6 space-y-4">
+                <div className="bg-rose-500/5 p-4 rounded-xl border border-rose-500/10 mb-2">
+                  <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
+                    <i className="fas fa-bullhorn mr-2 text-rose-500"></i>
+                    Beginner Explanation: We track high-impact news like Inflation and Interest Rates. These events are the main reason for large, fast price movements in the market.
+                  </p>
+                </div>
                 <div className="space-y-4 max-h-[350px] overflow-y-auto pr-3 custom-scrollbar">
                     {marketState.news.map(n => (
                       <div key={n.id} className="text-[11px] bg-zinc-950 p-4 rounded-2xl border border-zinc-800/60 shadow-inner group hover:border-rose-500/30 transition-colors">
@@ -405,13 +442,13 @@ const App: React.FC = () => {
       <div id="final-action" className="mt-16 relative">
         <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 bg-blue-500/20 blur-[100px] pointer-events-none"></div>
         <div className="bg-card rounded-[3rem] shadow-[0_60px_150px_rgba(0,0,0,0.8)] relative overflow-hidden border-2 border-blue-500/30 bg-gradient-to-b from-[#141417] to-[#08080a]">
-          <div className="p-10 pb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-zinc-800/40">
+          <div className="p-6 md:p-10 pb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-zinc-800/40">
             <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-2">
                  <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping"></div>
-                 <span className="text-[11px] font-black text-blue-500 uppercase tracking-[0.5em]">SECURE GATEWAY STATUS: ONLINE</span>
+                 <span className="text-[10px] md:text-[11px] font-black text-blue-500 uppercase tracking-[0.5em]">SECURE ADVISORY CORE</span>
               </div>
-              <h2 className="text-4xl font-black text-white uppercase italic tracking-tighter">
+              <h2 className="text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter">
                 PREDICTIVE VERDICT: <span className="text-blue-500">{selectedPair}</span>
               </h2>
             </div>
@@ -419,22 +456,22 @@ const App: React.FC = () => {
               <button 
                 onClick={() => runAnalysis()} 
                 disabled={isAnalyzing}
-                className={`px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-black uppercase rounded-2xl transition-all shadow-2xl active:scale-95 flex items-center gap-3 ${isAnalyzing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`px-6 py-3 md:px-8 md:py-4 bg-blue-600 hover:bg-blue-500 text-white text-[10px] md:text-[11px] font-black uppercase rounded-2xl transition-all shadow-2xl active:scale-95 flex items-center gap-3 ${isAnalyzing ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <i className={`fas ${isAnalyzing ? 'fa-spinner fa-spin' : 'fa-brain'}`}></i> RE-SYNC ANALYSIS
               </button>
             </div>
           </div>
 
-          <div className="p-10 lg:p-14 space-y-12 relative min-h-[500px]">
+          <div className="p-6 md:p-10 lg:p-14 space-y-12 relative min-h-[500px]">
             {isAnalyzing && (
-              <div className="absolute inset-0 bg-zinc-950/95 backdrop-blur-xl z-[100] flex flex-col items-center justify-center text-center">
+              <div className="absolute inset-0 bg-zinc-950/95 backdrop-blur-xl z-[100] flex flex-col items-center justify-center text-center p-6">
                 <div className="relative mb-8">
                    <div className="w-24 h-24 border-b-2 border-blue-500 rounded-full animate-spin"></div>
                    <i className="fas fa-microchip absolute inset-0 flex items-center justify-center text-3xl text-blue-500"></i>
                 </div>
-                <p className="text-blue-400 font-mono text-xs font-black uppercase tracking-[0.5em] animate-pulse">Communicating with Secure Backend...</p>
-                <p className="text-zinc-600 text-[9px] mt-4 uppercase tracking-widest">Encrypting Payload & Validating Session Token</p>
+                <p className="text-blue-400 font-mono text-xs font-black uppercase tracking-[0.5em] animate-pulse">Running Multi-Factor Advisory...</p>
+                <p className="text-zinc-600 text-[9px] mt-4 uppercase tracking-widest">Compiling Session Liquidity & Economic Catalysts</p>
               </div>
             )}
 
@@ -456,24 +493,24 @@ const App: React.FC = () => {
               </div>
             ) : (
               visibleSections.analysis && (
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-16 items-start">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 md:gap-16 items-start">
                   <div className="space-y-12">
                     {signal && <Gauge value={signal.score} label="CONFLUENCE CONFIDENCE" />}
                     
-                    <div className={`p-12 rounded-[2.5rem] border-[6px] text-center transition-all duration-1000 ${signal?.score && signal.score >= 80 ? 'bg-emerald-600/10 text-emerald-400 border-emerald-500/40 shadow-[0_0_80px_rgba(16,185,129,0.15)]' : signal?.score && signal.score <= 30 ? 'bg-rose-600/10 text-rose-400 border-rose-500/40' : 'bg-zinc-900/50 text-zinc-100 border-zinc-800 shadow-inner'}`}>
-                      <span className="text-[12px] font-black uppercase tracking-[0.4em] block mb-4 opacity-50">RECOMMENDED ACTION</span>
-                      <span className="text-6xl font-black italic uppercase tracking-tighter block leading-none">{signal?.action || 'STANDBY'}</span>
+                    <div className={`p-8 md:p-12 rounded-[2.5rem] border-[6px] text-center transition-all duration-1000 ${signal?.score && signal.score >= 80 ? 'bg-emerald-600/10 text-emerald-400 border-emerald-500/40 shadow-[0_0_80px_rgba(16,185,129,0.15)]' : signal?.score && signal.score <= 30 ? 'bg-rose-600/10 text-rose-400 border-rose-500/40' : 'bg-zinc-900/50 text-zinc-100 border-zinc-800 shadow-inner'}`}>
+                      <span className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em] block mb-4 opacity-50">RECOMMENDED ACTION</span>
+                      <span className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter block leading-none">{signal?.action || 'STANDBY'}</span>
                     </div>
 
-                    <div className="bg-zinc-950/80 p-10 rounded-[2.5rem] border border-blue-500/10 shadow-inner relative overflow-hidden group">
+                    <div className="bg-zinc-950/80 p-8 md:p-10 rounded-[2.5rem] border border-blue-500/10 shadow-inner relative overflow-hidden group">
                       <div className="absolute -top-10 -right-10 p-10 opacity-[0.02]">
                         <i className="fas fa-terminal text-9xl"></i>
                       </div>
                       <div className="flex items-center gap-4 mb-6">
                         <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-                        <h4 className="text-sm font-black text-blue-400 uppercase tracking-[0.4em]">BACKEND DIRECTIVE</h4>
+                        <h4 className="text-[11px] md:text-sm font-black text-blue-400 uppercase tracking-[0.4em]">ADVISORY DIRECTIVE</h4>
                       </div>
-                      <p className="text-lg font-bold leading-relaxed text-zinc-200 font-mono tracking-tight italic">
+                      <p className="text-base md:text-lg font-bold leading-relaxed text-zinc-200 font-mono tracking-tight italic">
                         {signal?.score && signal.score >= 80 
                           ? `STRATEGIC ENTRY DETECTED: Confluence is maxed. Enter ${selectedPair} at current price levels. Targets: ${signal.tp.toFixed(5)}. Risk Managed at: ${signal.sl.toFixed(5)}.`
                           : signal?.score && signal.score >= 55 
@@ -487,14 +524,14 @@ const App: React.FC = () => {
                   <div className="space-y-10">
                     <MiniChart pair={selectedPair} tp={signal?.tp} sl={signal?.sl} currentPrice={marketState.dxy.price / 100 + (selectedPair.includes('EUR') ? 0.05 : 0.08)} />
                     
-                    <div className="bg-zinc-900/30 p-10 rounded-[2.5rem] border border-zinc-800/50 shadow-inner backdrop-blur-sm">
+                    <div className="bg-zinc-900/30 p-8 md:p-10 rounded-[2.5rem] border border-zinc-800/50 shadow-inner backdrop-blur-sm">
                       <span className="text-[10px] font-black text-zinc-600 block mb-8 uppercase tracking-[0.4em] flex items-center gap-3">
                          <i className="fas fa-list-ol text-blue-500"></i> Logic Verification:
                       </span>
                       <ul className="space-y-6">
                         {signal?.reasoning.map((r, i) => (
-                          <li key={i} className="text-[13px] flex items-start gap-5 group border-b border-zinc-800/40 pb-5 last:border-0">
-                            <div className="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center text-[10px] text-blue-500 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                          <li key={i} className="text-[12px] md:text-[13px] flex items-start gap-4 md:gap-5 group border-b border-zinc-800/40 pb-5 last:border-0">
+                            <div className="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center text-[10px] text-blue-500 border border-blue-500/20 group-hover:bg-blue-500 group-hover:text-white transition-all shrink-0">
                                {i + 1}
                             </div>
                             <span className="text-zinc-300 font-bold leading-relaxed group-hover:text-white transition-colors tracking-tight">{r}</span>
@@ -510,8 +547,8 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <footer className="text-center py-20 text-zinc-700 text-[10px] font-black uppercase tracking-[0.6em] opacity-40">
-        Quant Terminal v3.8 — Secure Backend Tunnel Established // AES-256 Validated
+      <footer className="text-center py-20 text-zinc-700 text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] md:tracking-[0.6em] opacity-40 px-4">
+        FXCURRENCY ADVISER v3.8 — Institutional Connectivity Secured // AES-256 Validated Tunnel
       </footer>
     </div>
   );
