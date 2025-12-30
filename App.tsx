@@ -161,13 +161,11 @@ const App: React.FC = () => {
         <div className="w-16 h-16 border-4 border-zinc-900 border-t-blue-500 rounded-full animate-spin"></div>
         <div className="flex flex-col items-center animate-pulse">
            <span className="text-[10px] font-black uppercase tracking-[0.5em] mb-2">FX Adviser Core</span>
-           <span className="text-sm font-mono font-bold">BOOTING ADVISORY ENGINE...</span>
+           <span className="text-sm font-mono font-bold uppercase">Synthesizing Alpha...</span>
         </div>
       </div>
     );
   }
-
-  const currentSentiment = marketState.sentiment.find(s => s.pair === selectedPair);
 
   return (
     <div className="min-h-screen p-4 md:p-10 space-y-10 max-w-7xl mx-auto pb-32">
@@ -267,7 +265,7 @@ const App: React.FC = () => {
                 <div className="bg-orange-500/5 p-4 rounded-xl border border-orange-500/10 mb-2">
                   <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                     <i className="fas fa-gas-pump mr-2 text-orange-500"></i>
-                    <b>Beginner Explanation:</b> Every pair has a "Daily Range" (fuel limit). If a pair has already moved 90% of its normal distance, it's "exhausted" and likely to stop moving.
+                    <b>Beginner Explanation:</b> Every pair has a "Daily Range" (fuel limit). If a pair has already moved 90% of its normal distance, it's "exhausted" and likely to reverse.
                   </p>
                 </div>
                 <ADRMeter data={marketState.adr} />
@@ -287,7 +285,7 @@ const App: React.FC = () => {
                 <div className="bg-amber-500/5 p-4 rounded-xl border border-amber-500/10 mb-2">
                   <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                     <i className="fas fa-crosshairs mr-2 text-amber-500"></i>
-                    <b>Beginner Explanation:</b> Select the asset you want the AI to analyze. Start with "Majors" (like EURUSD) as they are the most predictable and safe for beginners.
+                    <b>Beginner Explanation:</b> Select your currency pair. "Majors" (like EURUSD) have higher volume and are generally safer for beginners to analyze.
                   </p>
                 </div>
                 <div className="space-y-3">
@@ -336,7 +334,7 @@ const App: React.FC = () => {
                 <div className="bg-sky-500/5 p-5 rounded-2xl border border-sky-500/10">
                   <p className="text-[11px] text-zinc-400 font-bold leading-relaxed italic">
                     <i className="fas fa-info-circle mr-2 text-sky-500"></i>
-                    <b>Beginner Explanation:</b> Forex operates in waves. The "London" and "New York" sessions are when the most money moves. The <b>KillZones</b> are specific times when institutional banks usually hunt for orders.
+                    <b>Beginner Explanation:</b> The market isn't always active. The <b>"Overlap"</b> (when London and NY are both open) is when the most "smart money" enters the market.
                   </p>
                 </div>
                 <MarketHoursTimeline />
@@ -358,7 +356,7 @@ const App: React.FC = () => {
                 <div className="bg-blue-500/5 p-5 rounded-2xl border border-blue-500/10">
                   <p className="text-[11px] text-zinc-400 font-bold leading-relaxed italic">
                     <i className="fas fa-search-dollar mr-2 text-blue-500"></i>
-                    <b>Beginner Explanation:</b> Banks need large amounts of "Liquidity" to buy or sell. They move price to these specific levels (Nodes) to trap smaller traders and get their own massive orders filled.
+                    <b>Beginner Explanation:</b> Banks place huge orders at specific price levels. We track these <b>"Nodes"</b> because price usually bounces or reacts strongly when it touches them.
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -384,7 +382,7 @@ const App: React.FC = () => {
         <aside className="lg:col-span-3 space-y-8">
           <div className="bg-card rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden">
              <div className="p-5 bg-zinc-900/40 flex justify-between items-center border-b border-zinc-800/30">
-               <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Dollar Index Feed</h3>
+               <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Dollar Index (DXY)</h3>
                <button onClick={() => toggleSection('dollar')} className="text-zinc-600 hover:text-white transition-colors">
                 <i className={`fas ${visibleSections.dollar ? 'fa-eye' : 'fa-eye-slash'}`}></i>
               </button>
@@ -394,7 +392,7 @@ const App: React.FC = () => {
                   <div className="bg-zinc-950/80 p-4 rounded-xl border border-zinc-800/50 mb-2">
                     <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                       <i className="fas fa-anchor mr-2 text-white"></i>
-                      <b>Beginner Explanation:</b> The <b>DXY</b> is the index for the US Dollar. Since the Dollar is the center of the world, when DXY goes UP, pairs like EURUSD almost always go DOWN.
+                      <b>Beginner Explanation:</b> The <b>DXY</b> measures the US Dollar. If the Dollar is strong (DXY is Bullish), pairs like EURUSD will almost always go DOWN.
                     </p>
                   </div>
                   <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 flex justify-between items-center shadow-inner">
@@ -420,7 +418,7 @@ const App: React.FC = () => {
                 <div className="bg-rose-500/5 p-4 rounded-xl border border-rose-500/10 mb-2">
                   <p className="text-[10px] text-zinc-400 font-bold leading-tight italic">
                     <i className="fas fa-bullhorn mr-2 text-rose-500"></i>
-                    <b>Beginner Explanation:</b> We monitor global news events. "High Impact" events like CPI or Interest Rates cause massive price spikes. Avoid trading during these spikes if you are a beginner.
+                    <b>Beginner Explanation:</b> High impact news (CPI, Jobs reports) causes massive price swings. It is usually best to avoid trading 15 minutes before and after these events.
                   </p>
                 </div>
                 <div className="space-y-4 max-h-[350px] overflow-y-auto pr-3 custom-scrollbar">
@@ -520,8 +518,8 @@ const App: React.FC = () => {
                         {signal?.score && signal.score >= 80 
                           ? `STRATEGIC ENTRY DETECTED: Confluence is maxed. Enter ${selectedPair} at current price levels. Targets: ${signal.tp.toFixed(5)}. Risk Managed at: ${signal.sl.toFixed(5)}.`
                           : signal?.score && signal.score >= 55 
-                          ? `PARTIAL ALIGNMENT: Institutional footprint visible but liquidity not fully captured. Scale-in with 0.5% risk. Monitor Dollar Index for 15m candle close.`
-                          : `CAUTION ADVISED: High conflict between Dollar trend and Asset sentiment. Market is currently 'choppy'. Stay on the sidelines until New York session overlap for clearer direction.`
+                          ? `PARTIAL ALIGNMENT: Institutional footprint visible but liquidity not fully captured. Scale-in with smaller risk. Monitor Dollar Index for confirmation.`
+                          : `CAUTION ADVISED: High conflict between Dollar trend and Asset sentiment. Market is currently 'choppy'. Stay on the sidelines until New York session overlap.`
                         }
                       </p>
                     </div>
